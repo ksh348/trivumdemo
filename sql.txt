@@ -1,0 +1,112 @@
+*Problem - 1*
+Write queries for the following scenarios:
+*A.* Create a table employee with the following structureId int;Name varchar;Department varchar;Salary float;
+*B.* Insert at least 3 employee data in the table
+*C.* Print the id and name of all employees from the employee table who are working in any one department.
+*D.* Display the sum, average, maximum and minimum of salaries of all the employees.
+*E.* Print all the employee table records arranged in ascending order based on the department column.
+*F.* Print all the employee table records arranged in ascending order based on the department column who gains salary greater than integer of average salary.
+*G.* Show all names of employees who has letter ‘a’ in their names.
+
+*Solution*:
+*A.* create table employee(id int, name varchar(255), department varchar(255), salary float);
+*B.* insert into employee values(1, 'Aman','IT', 12000.0);insert into employee values(2, 'Bhuvan','HR', 15000.0);insert into employee values(3, 'Chandan','Admin', 18000.0);insert into employee values(4, 'Ramesh','Admin', 17000.0);insert into employee values(5, 'Jojin','IT', 13500.0);insert into employee values(6, 'Samuel','Admin', 18000.0);
+*C.* select id,name from employee where department = 'IT';
+*D.* select sum(salary),avg(salary),max(salary),min(salary) from employee;
+*E.* select * from employee order by department;Orselect * from employee order by department asc;
+*F.* select * from employee where salary >15000 order by department;
+*G.* select name from employee where name not like '%a%';
+
+
+
+
+*Problem - 2*
+Create table restaurant with following structure
+Id int (primary key)
+Name varchar
+
+Create table dishes which follows a referential integrity constraint
+dishId int
+dishName varchar
+Price float,
+restaurantId int → it references the Id of restaurant table
+
+1.Insert values into the restaurant table
+2.Insert values into the dishes tables
+3.Perform left join, right join, inner join
+4.Count the no of dishes with unique prices
+5.Display the restaurant name which has a dish with price less than 20.
+6.Display the restaurant names that have at least three dishes in their menu.
+7.Increase the prices of all dishes by 10%, whose current price is less than or equal to 50.
+
+Sample Output
+
+Restaurant table
+Id 	name
+1  	Punjabi Rasoi
+2  	Udupi Grand
+3	BBQnation
+
+Dishes table
+dishid 	dishName		price		restaurantId
+1 		Dal Makhni	120 		1
+2 		Sarso Saag		100 		1
+3 		Tandoori Roti 	  12		1
+4 		Masala Dosa 	  40		2
+5 		Rava Idly 		  50		2
+6 		Vada			  30		2
+7 		pizza			150		3
+8 		burger		  80		3
+9 		Momos 		  50		3
+
+list of dishes that belong to Udupi Grand
+Masala Dosa
+Rava Idly
+Vada
+
+→ Burger belongs	BBQ Nation
+→ count of dishes that belong to restaurantId(2) = 3
+→ average of all dish prices is 70.222
+→ dishName along with restaurant name in descending order of the prices
+
+dishName			price 	name
+pizza				150 		BBQ n
+ationDal Makhni 	120 		Punjabi 
+RasoiSarso Saag	100		Punjabi 
+Rasoiburger 		  80		BBQ nation
+Momos 			  50		BBQ nation
+Rava Idly			  50		UdupiGrand
+Masala Dosa 		  40		Udupi Grand
+Vada 			  30		Udupi Grand
+Tandoori Roti 		  12		Punjabi Rasoi
+
+*Solution*
+1)
+create table restaurant( id int primary key,name varchar(255));insert into restaurant values (1, 'Punjabi Rasoi');insert into restaurant values (2, 'Udupi Grand');insert into restaurant values (3, 'BBQ nation');select * from restaurant;
+
+2)
+create table dishes(dishid int primary key, dishName varchar(255), price float,restaurantId int,foreign key (restaurantId) references restaurant(id));
+insert into dishes values(1,'Dal Makhni', 120.00, 1);
+insert into dishes values(2,'Sarso Saag', 100.00, 1);
+insert into dishes values(3,'Tandoori Roti', 12.00, 1);
+insert into dishes values(4, 'Masala Dosa' , 40.00, 2);
+insert into dishes values (5, ' Rava Idly', 50.00 , 2);
+insert into dishes values ( 6, 'Vada', 30.00, 2);
+insert into dishes values ( 7, 'pizza', 150.00, 3);
+insert into dishes values ( 8, 'burger', 80.00, 3);
+insert into dishes values (9, 'Momos', 50.00,3);
+
+3)
+select d.dishName,d.price,r.name from dishes d left join restaurant r on d.restaurantId = r.id;
+select d.dishName,d.price,r.name from dishes d right join restaurant r on d.restaurantId = r.id;
+select d.dishName,d.price,r.name from dishes d inner join restaurant r on d.restaurantId = r.id;
+
+4)
+select count(distinct(price)) from dishes;
+
+5)
+select distinct(r.name) from restaurant r, dishes d where r.id = d.restaurantId and d.price < 20;
+
+6)select r.name from restaurant r, dishes dwhere r.id = d.restaurantId group by restaurantIdhaving count(restaurantId)>2;
+
+7)update dishes set price = price * 1.10 where price <=50;
